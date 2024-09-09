@@ -1,0 +1,5 @@
+baseURL = 'https://brunomikoski.com/'
+languageCode = 'en-us'
+title = 'Bruno Mikoski'
+theme = 'bruno'
+environment = 'development'

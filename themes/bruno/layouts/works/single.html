@@ -1,0 +1,104 @@
+{{ define "main" }}
+  <section class="project-details" aria-labelledby="project-title">
+    <h1 id="project-title">{{ .Title }}</h1>
+    
+    {{ .Content }}
+
+    <!-- Display YouTube video if available -->
+    {{ if .Params.youtube }}
+    {{ $youtubeID := replaceRE "^.*youtu\\.be/(.*)$" "${1}" .Params.youtube }}
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $youtubeID }}" frameborder="0"
+        allowfullscreen title="Video of project {{ .Title }}"></iframe>
+    </div>
+    {{ end }}
+
+    <!-- Display project information if available -->
+    {{ if .Params.language }}
+      {{ if .Params.platforms }}
+    <div class="info" aria-label="Project information">
+      <p>Language: {{ .Params.language }}</p>
+      <p>Platforms: {{ .Params.platforms }}</p>
+    </div>
+      {{ end }}
+    {{ end }}
+  </section>
+  
+  <!-- Project gallery section -->
+  <section class="project-gallery" aria-label="Project gallery">
+  <!-- Match all jpg, png, and webp images in the project's resource folder -->
+  {{ $jpgImages := .Resources.Match "*.jpg" }}
+  {{ $pngImages := .Resources.Match "*.png" }}
+  {{ $webpImages := .Resources.Match "*.webp" }}
+  {{ $images := union (union $jpgImages $pngImages) $webpImages }}
+  {{ if $images }}
+    {{ range $images }}
+    <!-- Check if the image is jpg, png, webp, or jpeg and not thumb.jpg, thumb.png, or thumb.webp -->
+    {{ $ext := path.Ext .Name }}
+    {{ if and (or (eq $ext ".jpg") (eq $ext ".png") (eq $ext ".webp") (eq $ext ".jpeg")) (not (hasPrefix .Name "thumb.")) }}
+    <a href="{{ .RelPermalink }}" data-gall="gallery-project" class="open-modal"><img src="{{ .RelPermalink }}"  alt="{{ $.Title }} - Image"></a>
+    {{ end }}
+    {{ end }}
+  {{ end }}
+  </section>
+  
+  <!-- Related projects section -->
+  {{ $currentPage := . }}
+  {{ $relatedProjects := slice }}
+
+  <!-- Find related projects based on tags -->
+  {{ range .Params.tags }}
+    {{ $tag := . }}
+    {{ $taggedProjects := where (where $currentPage.Site.RegularPages "Type" "works") "Params.tags" "intersect" (slice $tag) }}
+    {{ $relatedProjects = $relatedProjects | union $taggedProjects }}
+  {{ end }}
+
+  <!-- Remove the current page from related projects -->
+  {{ $relatedProjects = where $relatedProjects "Permalink" "ne" $currentPage.Permalink }}
+
+  <!-- Shuffle and limit to 3 -->
+  {{ $relatedProjects = $relatedProjects | shuffle | first 3 }}
+
+  <!-- If we don't have 3 related projects, fill with random projects -->
+  {{ $remainingCount := sub 3 (len $relatedProjects) }}
+  {{ if gt $remainingCount 0 }}
+    {{ $randomProjects := where (where .Site.RegularPages "Type" "works") "Permalink" "ne" $currentPage.Permalink | shuffle | first $remainingCount }}
+    {{ $relatedProjects = $relatedProjects | union $randomProjects }}
+  {{ end }}
+
+  {{ if $relatedProjects }}
+  <section class="related-projects" aria-labelledby="related-projects-title">
+    <h3 id="related-projects-title">You may also like</h3>
+    <div class="related-projects-grid">
+      {{ range $index, $element := $relatedProjects }}
+      <div class="related-project related-game{{ add $index 1 }}">
+        <a href="{{ .RelPermalink }}" aria-label="View project: {{ .Title }}">
+          <!-- Construct the path for the thumbnail image -->
+          {{ $thumbBase := path.Join .File.Dir "thumb" }}
+          {{ $jpgPath := printf "%s.jpg" $thumbBase }}
+          {{ $pngPath := printf "%s.png" $thumbBase }}
+          {{ $webpPath := printf "%s.webp" $thumbBase }}
+          <!-- Use WebP if it exists, then JPG, then PNG, fallback to a placeholder if none exist -->
+          {{ $thumbnailPath := "" }}
+          {{ if (fileExists $webpPath) }}
+            {{ $thumbnailPath = $webpPath }}
+          {{ else if (fileExists $jpgPath) }}
+            {{ $thumbnailPath = $jpgPath }}
+          {{ else if (fileExists $pngPath) }}
+            {{ $thumbnailPath = $pngPath }}
+          {{ else }}
+            {{ $thumbnailPath = "/images/placeholder.jpg" }}
+          {{ end }}
+          <img src="{{ $thumbnailPath | relURL }}" alt="Thumbnail of project {{ .Title }}">
+          <h4>{{ .Title }}</h4>
+          <!-- Display the year if available -->
+          {{ with .Params.year }}
+            <p>{{ . }}</p>
+          {{ end }}
+        </a>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+{{ end }}

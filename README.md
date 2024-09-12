@@ -81,4 +81,4 @@ This README provides instructions for managing the portfolio content and structu
   - Related projects section (based on tags, filled with random projects if needed)
 - Regularly backup your content and theme files
 
-For any questions or issues, please refer to the project documentation or contact the maintainer.
+For any questions or issues, please contact us at coopers@coopers.digital

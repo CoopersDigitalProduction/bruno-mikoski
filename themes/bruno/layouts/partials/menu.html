@@ -11,35 +11,34 @@ Renders a menu for the given menu ID.
 {{- $menuID := .menuID }}
 
 {{- with index site.Menus $menuID }}
-  <div class="menu">
-    {{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
-  </div>
+<div class="menu">
+  {{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <button class="menu-close">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
 {{- end }}
 
 {{- define "partials/inline/menu/walk.html" }}
-  {{- $page := .page }}
-  {{- range .menuEntries }}
-    {{- $attrs := dict "href" .URL }}
-    {{- if $page.IsMenuCurrent .Menu . }}
-      {{- $attrs = merge $attrs (dict "class" "active" "aria-current" "page") }}
-    {{- else if $page.HasMenuCurrent .Menu .}}
-      {{- $attrs = merge $attrs (dict "class" "ancestor" "aria-current" "true") }}
-    {{- end }}
-    {{- $name := .Name }}
-    {{- with .Identifier }}
-      {{- with T . }}
-        {{- $name = . }}
-      {{- end }}
-    {{- end }}
-    <a
-      {{- range $k, $v := $attrs }}
-        {{- with $v }}
-          {{- printf " %s=%q" $k $v | safeHTMLAttr }}
-        {{- end }}
-      {{- end -}}
-    >{{ $name }}</a>
-    {{- with .Children }}
-      {{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
-    {{- end }}
-  {{- end }}
+{{- $page := .page }}
+{{- range .menuEntries }}
+{{- $attrs := dict "href" .URL }}
+{{- if $page.IsMenuCurrent .Menu . }}
+{{- $attrs = merge $attrs (dict "class" "active" "aria-current" "page") }}
+{{- else if $page.HasMenuCurrent .Menu .}}
+{{- $attrs = merge $attrs (dict "class" "ancestor" "aria-current" "true") }}
+{{- end }}
+{{- $name := .Name }}
+{{- with .Identifier }}
+{{- with T . }}
+{{- $name = . }}
+{{- end }}
+{{- end }}
+<a {{- range $k, $v :=$attrs }} {{- with $v }} {{- printf " %s=%q" $k $v | safeHTMLAttr }} {{- end }} {{- end -}}>{{
+  $name }}</a>
+{{- with .Children }}
+{{- partial "inline/menu/walk.html" (dict "page" $page "menuEntries" .) }}
+{{- end }}
+{{- end }}
 {{- end }}

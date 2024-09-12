@@ -3,8 +3,8 @@
 <section class="all-works">
   <!-- Get the works page -->
   {{ $works := .Site.GetPage "/works" }}
-  <!-- Iterate over all works pages -->
-  {{ range $works.Pages }}
+  <!-- Iterate over all works pages, sorted by year in descending order -->
+  {{ range sort $works.Pages ".Params.year" "desc" }}
   <div class="project">
     <a href="{{ .RelPermalink }}">
       <!-- Check for JPG, PNG, and WebP thumbnails -->

@@ -4,7 +4,7 @@ title: 'Contact'
 type: page
 ---
 
-<form id="contactForm" method="post">
+<form id="contactForm">
   <div class="form-group">
     <label for="name">Name *</label>
     <input type="text" id="name" name="name" placeholder="Your Name..." required>
@@ -17,5 +17,17 @@ type: page
     <label for="message">Message *</label>
     <textarea id="message" name="message" placeholder="Your Message..." rows="6" required></textarea>
   </div>
-  <button type="submit">Submit</button>
+  <button type="submit" id="submitButton">
+    <span class="button-text">Send</span>
+    <svg class="loading-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+    </svg>
+  </button>
 </form>
+<div id="thankYouMessage" style="display: none;">
+  <h3>Thank you!</h3>
+  <p>Your message has been sent successfully.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="/js/contact-form.js"></script>

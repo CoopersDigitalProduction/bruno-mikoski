@@ -35,17 +35,120 @@ nav {
 }
 
 .menu {
-    display: none;
-}
-.menu-open{
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    text-decoration: none;
-    background-color: white;
-    padding: 10%;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(243, 243, 242, 0); /* Start with transparent background */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.menu-open {
+    opacity: 1;
+    visibility: visible;
+    background-color: rgba(243, 243, 242, 1); /* Fully opaque when open */
+    pointer-events: auto; /* Allow interaction when visible */
+}
+
+.menu a {
+    font-size: 24px;
+    text-decoration: none;
+    color: #aaa;
+    transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.menu a.active {
+    color: #444;
+}
+
+.menu-open a {
+    opacity: 1;
+    transform: translateY(0);
+    transition: color 0.3s ease, opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+
+.menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-open .menu-close {
+    opacity: 1;
+}
+
+/* Stagger the animation for menu items */
+.menu a:nth-child(1) { transition-delay: 0.1s; }
+.menu a:nth-child(2) { transition-delay: 0.2s; }
+.menu a:nth-child(3) { transition-delay: 0.3s; }
+/* Add more if you have more menu items */
+
+/* Ensure menu is hidden on larger screens if needed */
+@media (min-width: 769px) {
+    .menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        background-color: transparent;
+        pointer-events: auto;
+        flex-direction: row;
+        justify-content: center; /* Center the menu items */
+        height: auto;
+        margin-top: 10px;
+    }
+
+    .menu a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: #666;
+        font-weight: 300;
+        text-transform: none;
+        font-size: 40px;
+        padding-left: 40px;
+        opacity: 1;
+        transform: translateY(0);
+        transition: none;
+    }
+
+    .menu-toggle, .menu-close {
+        display: none;
+    }
+
+    header {
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 40px;
+        padding-top: 70px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo {
+        margin-bottom: 125px;
+    }
 }
 
 .menu-toggle {
@@ -60,9 +163,9 @@ nav {
 
 .menu-toggle .bar {
     width: 25px;
-    height: 3px;
+    height: 2px;
     background-color: #333;
-    margin: 3px 0;
+    margin: 2px 0;
 }
 .all-works{
     padding-top: 25px;
@@ -307,7 +410,11 @@ button[type="submit"]:hover {
         padding-bottom: 16px;
     }
 
-
+@media (min-width: 262px){
+    .logo {
+        white-space: nowrap;
+    }
+}
 @media (min-width: 541px) {
     .logo{
         font-size: 33px;
@@ -349,7 +456,7 @@ button[type="submit"]:hover {
 @media (min-width: 769px) {
     .menu {
         display: flex;
-        margin-top: 10px;
+        margin-top: 30px;
     }
     .menu a {
         margin: 0 10px;
@@ -369,7 +476,9 @@ button[type="submit"]:hover {
     .menu-toggle {
         display: none;
     }
-
+    .menu-close{
+        display: none;
+    }
     nav {
         display: flex;
         flex-direction: column;
@@ -485,6 +594,90 @@ button[type="submit"]:hover {
 
     .project-details .video-container {
         max-width: 550px;
+    }
+}
+
+/* Add these new styles for the video container */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin-bottom: 20px; /* Add some space below the video */
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Adjust the existing styles for project-details video */
+.project-details video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+}
+
+
+#submitButton {
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+#submitButton .button-text {
+    transition: opacity 0.3s;
+}
+
+#submitButton .loading-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    animation: spin 1s linear infinite;
+}
+
+#submitButton.loading .button-text {
+    opacity: 0;
+}
+
+#submitButton.loading .loading-svg {
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+#thankYouMessage {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#submitButton .loading-svg circle {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: circle-animation 1.5s cubic-bezier(0.78, 0.13, 0.15, 0.86) infinite;
+}
+
+@keyframes circle-animation {
+    0% {
+        stroke-dashoffset: 60;
+    }
+    50% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: -60;
     }
 }
 

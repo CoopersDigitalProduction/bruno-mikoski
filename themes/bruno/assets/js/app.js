@@ -1,9 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
-    new VenoBox({
-        selector: ".open-modal",
-        bgcolor: '#ffffff',
-        overlayColor: 'rgba(255, 255, 255, 0.85)',
-        maxWidth: '85%',
-        toolsColor: '#d2d2d2',
-    });
+// hamburger mobile menu
+let menuToggle = document.querySelector('.menu-toggle');
+let menu = document.querySelector('.menu');
+
+menuToggle.addEventListener('click', () => {
+    menu.classList.toggle('menu-open');
+})
+
+let menuClose = document.querySelector('.menu-close');
+menuClose.addEventListener('click', () => {
+    menu.classList.remove('menu-open');
 })

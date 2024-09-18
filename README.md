@@ -20,6 +20,7 @@ This README provides instructions for managing the portfolio content and structu
    language: "Project Language(s)"
    platforms: "Platform(s)"
    youtube: "YouTube video link (if applicable)"
+   featured: true  # Set to true for featured projects
    ---
 
    Project description goes here.
@@ -29,9 +30,15 @@ This README provides instructions for managing the portfolio content and structu
 1. Navigate to the project's subfolder in `/content/works`
 2. Edit the `index.md` file to update text content or parameters
 3. Replace or add images as needed
+4. To feature a project on the homepage, set `featured: true` in the front matter
 
 ### Deleting a Works Item
 1. Remove the project's subfolder from `/content/works`
+
+### Featured Projects
+- The homepage now displays the 6 most recent featured projects
+- To feature a project, add `featured: true` to its `index.md` front matter
+- If fewer than 6 projects are marked as featured, the remaining slots will be filled with the most recent non-featured projects
 
 ## Key File Locations
 
@@ -41,7 +48,8 @@ This README provides instructions for managing the portfolio content and structu
 
 ## Template Code Locations
 
-- Home Page (Works List): `/themes/bruno/layouts/_default/home.html`
+- Home Page (Featured Projects): `/themes/bruno/layouts/_default/home.html`
+- All Works Page: `/themes/bruno/layouts/_default/all-works.html`
 - Project Details: `/themes/bruno/layouts/works/single.html`
 - Generic Single Page: `/themes/bruno/layouts/_default/single.html`
 - Contact Page Wrapper: `/themes/bruno/layouts/_default/contact.html`

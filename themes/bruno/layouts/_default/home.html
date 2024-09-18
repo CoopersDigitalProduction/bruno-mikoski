@@ -1,38 +1,40 @@
-{{ define "main" }}
-{{ .Content }}
+{{ define "main" }} {{ .Content }}
 <section class="all-works">
-  <!-- Get the works page -->
-  {{ $works := .Site.GetPage "/works" }}
-  <!-- Iterate over all works pages, sorted by year in descending order -->
-  {{ range sort $works.Pages ".Params.year" "desc" }}
-  <div class="project">
-    <a href="{{ .RelPermalink }}">
-      <!-- Check for JPG, PNG, and WebP thumbnails -->
-      {{ $thumbBase := path.Join .File.Dir "thumb" }}
-      {{ $jpgPath := printf "%s.jpg" $thumbBase }}
-      {{ $pngPath := printf "%s.png" $thumbBase }}
-      {{ $webpPath := printf "%s.webp" $thumbBase }}
-      <!-- Use WebP if it exists, then JPG, then PNG, fallback to a placeholder if none exist -->
-      {{ $thumbnailPath := "" }}
-      {{ if (fileExists $webpPath) }}
-        {{ $thumbnailPath = $webpPath }}
-      {{ else if (fileExists $jpgPath) }}
-        {{ $thumbnailPath = $jpgPath }}
-      {{ else if (fileExists $pngPath) }}
-        {{ $thumbnailPath = $pngPath }}
-      {{ else }}
-        {{ $thumbnailPath = "/images/placeholder.jpg" }}
-      {{ end }}
-      <img src="{{ $thumbnailPath | relURL }}" alt="{{ .LinkTitle }}">
-      <div class="project-info">
-        <h2>{{ .LinkTitle }}</h2>
-        <!-- Display additional project information -->
-        <p>{{ .Params.year }}</p>
-        <p>{{ .Params.role }}</p>
-        <p>{{ .Params.language }} - {{ .Params.platforms }}</p>
-      </div>
-    </a>
-  </div>
-  {{ end }}
+    <!-- Get the works page -->
+    {{ $works := .Site.GetPage "/works" }}
+    <!-- Filter featured projects and sort by year in descending order -->
+    {{ $featuredWorks := where $works.Pages ".Params.featured" true }} {{
+    $sortedWorks := sort $featuredWorks ".Params.year" "desc" }}
+    <!-- If there are less than 6 featured projects, add more recent projects -->
+    {{ $displayWorks := $sortedWorks }} {{ if lt (len $displayWorks) 6 }} {{
+    $remainingCount := sub 6 (len $displayWorks) }} {{ $otherWorks := where
+    $works.Pages ".Params.featured" "!=" true }} {{ $sortedOtherWorks := first
+    $remainingCount (sort $otherWorks ".Params.year" "desc") }} {{ $displayWorks
+    = $displayWorks | append $sortedOtherWorks }} {{ end }}
+    <!-- Display the first 6 projects -->
+    {{ range first 6 $displayWorks }}
+    <div class="project">
+        <a href="{{ .RelPermalink }}">
+            <!-- Check for JPG, PNG, and WebP thumbnails -->
+            {{ $thumbBase := path.Join .File.Dir "thumb" }} {{ $jpgPath :=
+            printf "%s.jpg" $thumbBase }} {{ $pngPath := printf "%s.png"
+            $thumbBase }} {{ $webpPath := printf "%s.webp" $thumbBase }}
+            <!-- Use WebP if it exists, then JPG, then PNG, fallback to a placeholder if none exist -->
+            {{ $thumbnailPath := "" }} {{ if (fileExists $webpPath) }} {{
+            $thumbnailPath = $webpPath }} {{ else if (fileExists $jpgPath) }} {{
+            $thumbnailPath = $jpgPath }} {{ else if (fileExists $pngPath) }} {{
+            $thumbnailPath = $pngPath }} {{ else }} {{ $thumbnailPath =
+            "/images/placeholder.jpg" }} {{ end }}
+            <img src="{{ $thumbnailPath | relURL }}" alt="{{ .LinkTitle }}" />
+            <div class="project-info">
+                <h2>{{ .LinkTitle }}</h2>
+                <!-- Display additional project information -->
+                <p>{{ .Params.year }}</p>
+                <p>{{ .Params.role }}</p>
+                <p>{{ .Params.language }} - {{ .Params.platforms }}</p>
+            </div>
+        </a>
+    </div>
+    {{ end }}
 </section>
 {{ end }}

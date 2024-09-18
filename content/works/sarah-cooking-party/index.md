@@ -2,6 +2,7 @@
 title: Sara’s Cooking Party
 tags: ["unity", "mobile"]
 year: 2017
+featured: true
 role: Software Engineer
 language: C# / Unity
 platforms: Mobile - iOS / Android / TV Os

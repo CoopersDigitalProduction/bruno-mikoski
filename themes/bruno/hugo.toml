@@ -4,7 +4,7 @@ title = 'Bruno Mikoski - Software Engineer'
 
 [[menus.main]]
 name = 'All Works'
-pageRef = '/'
+pageRef = '/all-works'
 weight = 10
 
 [[menus.main]]
@@ -13,6 +13,6 @@ pageRef = '/contact'
 weight = 20
 
 [module]
-  [module.hugoVersion]
-    extended = false
-    min = "0.116.0"
+[module.hugoVersion]
+extended = false
+min = "0.116.0"

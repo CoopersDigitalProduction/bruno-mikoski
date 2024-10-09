@@ -1,4 +1,4 @@
-baseURL = 'https://www.brunomikoski.com/portifolio'
+baseURL = 'https://portifolio.brunomikoski.com'
 languageCode = 'en-us'
 title = 'Bruno Mikoski'
 theme = 'bruno'
